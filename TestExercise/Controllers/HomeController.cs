@@ -1,8 +1,11 @@
-﻿using System;
+﻿using DataStore;
+using DataStore.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TestExercise.Models;
 
 namespace TestExercise.Controllers
 {
@@ -13,18 +16,46 @@ namespace TestExercise.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult StoreDataDb(Person person)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            var storer = new Storer(new DataStoreDB());
+            if (storer.FetchFormData<Person>(person))
+            {
+                ViewBag.Message = "Data saved in database";
+            }
+            else
+            {
+                ViewBag.Message = "Failed to save data in database";
+            }
+            return View("~/Views/Home/Index.cshtml");
         }
 
-        public ActionResult Contact()
+        public ActionResult StoreDataLog(Person person)
         {
-            ViewBag.Message = "Your contact page.";
+            var storer = new Storer(new DataStoreLog());
+            if (storer.FetchFormData<Person>(person))
+            {
+                ViewBag.Message = "Data saved in logs";
+            }
+            else
+            {
+                ViewBag.Message = "Failed to save data in logs";
+            }
+            return View("~/Views/Home/Index.cshtml");
+        }
 
-            return View();
+        public ActionResult StoreDataXML(Person person)
+        {
+            var storer = new Storer(new DataStoreXML());
+            if (storer.FetchFormData<Person>(person))
+            {
+                ViewBag.Message = "Data stored to xml";
+            }
+            else
+            {
+                ViewBag.Message = "Failed to save data to xml";
+            }
+            return View("~/Views/Home/Index.cshtml");
         }
     }
 }
