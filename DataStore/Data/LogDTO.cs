@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataStore
+namespace DataStore.Data
 {
-    public class Class1
+    public class LogDTO
     {
+        public string Name { get; set; }
+        public string Surname { get; set; }
     }
 }
