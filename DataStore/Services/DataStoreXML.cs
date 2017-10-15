@@ -3,10 +3,8 @@ using DataStore.Interfaces;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -20,11 +18,13 @@ namespace DataStore.Services
         {
             try
             {
+                var directory = ConfigurationSettings.AppSettings["DirXML"] ?? @"C:\ExerciseApp\serialized.xml";
+
                 List<LogDTO> dtoList = new List<LogDTO>();
                 XmlSerializer serializer = new XmlSerializer(typeof(List<LogDTO>));
-                if (File.Exists(@"C:\ExerciseApp\serialized.xml"))
+                if (File.Exists(directory))
                 {
-                    using (var stream = new FileStream(@"C:\ExerciseApp\serialized.xml", FileMode.Open))
+                    using (var stream = new FileStream(directory, FileMode.Open))
                     {
                         XmlReader reader = XmlReader.Create(stream);
                         if (serializer.CanDeserialize(reader))
@@ -35,9 +35,9 @@ namespace DataStore.Services
                 }
                 else
                 {
-                    System.IO.Directory.CreateDirectory(Path.GetDirectoryName(@"C:\ExerciseApp\serialized.xml"));
+                    Directory.CreateDirectory(Path.GetDirectoryName(directory));
                 }
-                using (var stream = new FileStream(@"C:\ExerciseApp\serialized.xml", FileMode.Create))
+                using (var stream = new FileStream(directory, FileMode.Create))
                 {
                     dtoList.Add(storeObject);
                     serializer.Serialize(stream, dtoList);
